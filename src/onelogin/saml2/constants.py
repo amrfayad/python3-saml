@@ -48,12 +48,11 @@ class OneLogin_Saml2_Constants(object):
     NS_DS = 'http://www.w3.org/2000/09/xmldsig#'
 
     # Namespace Prefixes
-    NS_PREFIX_SAML = 'saml'
-    NS_PREFIX_SAMLP = 'samlp'
+    NS_PREFIX_SAML = 'saml2'
+    NS_PREFIX_SAMLP = 'saml2p'
     NS_PREFIX_MD = 'md'
     NS_PREFIX_XS = 'xs'
     NS_PREFIX_XSI = 'xsi'
-    NS_PREFIX_XSD = 'xsd'
     NS_PREFIX_XENC = 'xenc'
     NS_PREFIX_DS = 'ds'
 

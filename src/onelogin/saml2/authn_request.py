@@ -22,7 +22,7 @@ class OneLogin_Saml2_Authn_Request(object):
 
     """
 
-    def __init__(self, settings, force_authn=False, is_passive=False, set_nameid_policy=True, name_id_value_req=None):
+    def __init__(self, settings, force_authn=False, is_passive=False, set_nameid_policy=True):
         """
         Constructs the AuthnRequest object.
 
@@ -37,9 +37,6 @@ class OneLogin_Saml2_Authn_Request(object):
 
         :param set_nameid_policy: Optional argument. When true the AuthNRequest will set a nameIdPolicy element.
         :type set_nameid_policy: bool
-
-        :param name_id_value_req: Optional argument. Indicates to the IdP the subject that should be authenticated
-        :type name_id_value_req: string
         """
         self.__settings = settings
 
@@ -74,14 +71,6 @@ class OneLogin_Saml2_Authn_Request(object):
         if is_passive is True:
             is_passive_str = "\n" + '    IsPassive="true"'
 
-        subject_str = ''
-        if name_id_value_req:
-            subject_str = """
-    <saml:Subject>
-        <saml:NameID Format="%s">%s</saml:NameID>
-        <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"></saml:SubjectConfirmation>
-    </saml:Subject>""" % (sp_data['NameIDFormat'], name_id_value_req)
-
         nameid_policy_str = ''
         if set_nameid_policy:
             name_id_policy_format = sp_data['NameIDFormat']
@@ -89,7 +78,7 @@ class OneLogin_Saml2_Authn_Request(object):
                 name_id_policy_format = OneLogin_Saml2_Constants.NAMEID_ENCRYPTED
 
             nameid_policy_str = """
-    <samlp:NameIDPolicy
+    <saml2p:NameIDPolicy
         Format="%s"
         AllowCreate="true" />""" % name_id_policy_format
 
@@ -100,14 +89,14 @@ class OneLogin_Saml2_Authn_Request(object):
                 authn_comparison = security['requestedAuthnContextComparison']
 
             if security['requestedAuthnContext'] is True:
-                requested_authn_context_str = """    <samlp:RequestedAuthnContext Comparison="%s">
-        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
-    </samlp:RequestedAuthnContext>""" % authn_comparison
+                requested_authn_context_str = """    <saml2p:RequestedAuthnContext Comparison="%s">
+        <saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password</saml2:AuthnContextClassRef>
+    </saml2p:RequestedAuthnContext>""" % authn_comparison
             else:
-                requested_authn_context_str = '     <samlp:RequestedAuthnContext Comparison="%s">' % authn_comparison
+                requested_authn_context_str = '     <saml2p:RequestedAuthnContext Comparison="%s">' % authn_comparison
                 for authn_context in security['requestedAuthnContext']:
-                    requested_authn_context_str += '<saml:AuthnContextClassRef>%s</saml:AuthnContextClassRef>' % authn_context
-                requested_authn_context_str += '    </samlp:RequestedAuthnContext>'
+                    requested_authn_context_str += '<saml2:AuthnContextClassRef>%s</saml2:AuthnContextClassRef>' % authn_context
+                requested_authn_context_str += '    </saml2p:RequestedAuthnContext>'
 
         attr_consuming_service_str = ''
         if 'attributeConsumingService' in sp_data and sp_data['attributeConsumingService']:
@@ -123,7 +112,6 @@ class OneLogin_Saml2_Authn_Request(object):
                 'destination': destination,
                 'assertion_url': sp_data['assertionConsumerService']['url'],
                 'entity_id': sp_data['entityId'],
-                'subject_str': subject_str,
                 'nameid_policy_str': nameid_policy_str,
                 'requested_authn_context_str': requested_authn_context_str,
                 'attr_consuming_service_str': attr_consuming_service_str,

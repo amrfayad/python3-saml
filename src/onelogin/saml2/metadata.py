@@ -134,7 +134,7 @@ class OneLogin_Saml2_Metadata(object):
                 if 'nameFormat' in req_attribs.keys() and req_attribs['nameFormat']:
                     req_attr_nameformat_str = " NameFormat=\"%s\"" % req_attribs['nameFormat']
                 if 'friendlyName' in req_attribs.keys() and req_attribs['friendlyName']:
-                    req_attr_friendlyname_str = " FriendlyName=\"%s\"" % req_attribs['friendlyName']
+                    req_attr_nameformat_str = " FriendlyName=\"%s\"" % req_attribs['friendlyName']
                 if 'isRequired' in req_attribs.keys() and req_attribs['isRequired']:
                     req_attr_isrequired_str = " isRequired=\"%s\"" % 'true' if req_attribs['isRequired'] else 'false'
                 if 'attributeValue' in req_attribs.keys() and req_attribs['attributeValue']:
@@ -144,7 +144,7 @@ class OneLogin_Saml2_Metadata(object):
                     req_attr_aux_str = ">"
                     for attrValue in req_attribs['attributeValue']:
                         req_attr_aux_str += """
-                <saml:AttributeValue xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">%(attributeValue)s</saml:AttributeValue>""" % \
+                <saml2:AttributeValue xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">%(attributeValue)s</saml2:AttributeValue>""" % \
                             {
                                 'attributeValue': attrValue
                             }

@@ -2,7 +2,7 @@
 <schema
     targetNamespace="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns="http://www.w3.org/2001/XMLSchema"
-    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
     xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
     elementFormDefault="unqualified"
@@ -30,15 +30,15 @@
         <attribute name="NameQualifier" type="string" use="optional"/>
         <attribute name="SPNameQualifier" type="string" use="optional"/>
     </attributeGroup>
-    <element name="BaseID" type="saml:BaseIDAbstractType"/>
+    <element name="BaseID" type="saml2:BaseIDAbstractType"/>
     <complexType name="BaseIDAbstractType" abstract="true">
-        <attributeGroup ref="saml:IDNameQualifiers"/>
+        <attributeGroup ref="saml2:IDNameQualifiers"/>
     </complexType>
-    <element name="NameID" type="saml:NameIDType"/>
+    <element name="NameID" type="saml2:NameIDType"/>
     <complexType name="NameIDType">
         <simpleContent>
             <extension base="string">
-                <attributeGroup ref="saml:IDNameQualifiers"/>
+                <attributeGroup ref="saml2:IDNameQualifiers"/>
                 <attribute name="Format" type="anyURI" use="optional"/>
                 <attribute name="SPProvidedID" type="string" use="optional"/>
             </extension>
@@ -50,56 +50,56 @@
             <element ref="xenc:EncryptedKey" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
-    <element name="EncryptedID" type="saml:EncryptedElementType"/>
-    <element name="Issuer" type="saml:NameIDType"/>
+    <element name="EncryptedID" type="saml2:EncryptedElementType"/>
+    <element name="Issuer" type="saml2:NameIDType"/>
     <element name="AssertionIDRef" type="NCName"/>
     <element name="AssertionURIRef" type="anyURI"/>
-    <element name="Assertion" type="saml:AssertionType"/>
+    <element name="Assertion" type="saml2:AssertionType"/>
     <complexType name="AssertionType">
         <sequence>
-            <element ref="saml:Issuer"/>
+            <element ref="saml2:Issuer"/>
             <element ref="ds:Signature" minOccurs="0"/>
-            <element ref="saml:Subject" minOccurs="0"/>
-            <element ref="saml:Conditions" minOccurs="0"/>
-            <element ref="saml:Advice" minOccurs="0"/>
+            <element ref="saml2:Subject" minOccurs="0"/>
+            <element ref="saml2:Conditions" minOccurs="0"/>
+            <element ref="saml2:Advice" minOccurs="0"/>
             <choice minOccurs="0" maxOccurs="unbounded">
-                <element ref="saml:Statement"/>
-                <element ref="saml:AuthnStatement"/>
-                <element ref="saml:AuthzDecisionStatement"/>
-                <element ref="saml:AttributeStatement"/>
+                <element ref="saml2:Statement"/>
+                <element ref="saml2:AuthnStatement"/>
+                <element ref="saml2:AuthzDecisionStatement"/>
+                <element ref="saml2:AttributeStatement"/>
             </choice>
         </sequence>
         <attribute name="Version" type="string" use="required"/>
         <attribute name="ID" type="ID" use="required"/>
         <attribute name="IssueInstant" type="dateTime" use="required"/>
     </complexType>
-    <element name="Subject" type="saml:SubjectType"/>
+    <element name="Subject" type="saml2:SubjectType"/>
     <complexType name="SubjectType">
         <choice>
             <sequence>
                 <choice>
-                    <element ref="saml:BaseID"/>
-                    <element ref="saml:NameID"/>
-                    <element ref="saml:EncryptedID"/>
+                    <element ref="saml2:BaseID"/>
+                    <element ref="saml2:NameID"/>
+                    <element ref="saml2:EncryptedID"/>
                 </choice>
-                <element ref="saml:SubjectConfirmation" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="saml2:SubjectConfirmation" minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
-            <element ref="saml:SubjectConfirmation" maxOccurs="unbounded"/>
+            <element ref="saml2:SubjectConfirmation" maxOccurs="unbounded"/>
         </choice>
     </complexType>
-    <element name="SubjectConfirmation" type="saml:SubjectConfirmationType"/>
+    <element name="SubjectConfirmation" type="saml2:SubjectConfirmationType"/>
     <complexType name="SubjectConfirmationType">
         <sequence>
             <choice minOccurs="0">
-                <element ref="saml:BaseID"/>
-                <element ref="saml:NameID"/>
-                <element ref="saml:EncryptedID"/>
+                <element ref="saml2:BaseID"/>
+                <element ref="saml2:NameID"/>
+                <element ref="saml2:EncryptedID"/>
             </choice>
-            <element ref="saml:SubjectConfirmationData" minOccurs="0"/>
+            <element ref="saml2:SubjectConfirmationData" minOccurs="0"/>
         </sequence>
         <attribute name="Method" type="anyURI" use="required"/>
     </complexType>
-    <element name="SubjectConfirmationData" type="saml:SubjectConfirmationDataType"/>
+    <element name="SubjectConfirmationData" type="saml2:SubjectConfirmationDataType"/>
     <complexType name="SubjectConfirmationDataType" mixed="true">
         <complexContent>
             <restriction base="anyType">
@@ -117,74 +117,74 @@
     </complexType>
     <complexType name="KeyInfoConfirmationDataType" mixed="false">
         <complexContent>
-            <restriction base="saml:SubjectConfirmationDataType">
+            <restriction base="saml2:SubjectConfirmationDataType">
                 <sequence>
                     <element ref="ds:KeyInfo" maxOccurs="unbounded"/>
                 </sequence>
             </restriction>
         </complexContent>
     </complexType>
-    <element name="Conditions" type="saml:ConditionsType"/>
+    <element name="Conditions" type="saml2:ConditionsType"/>
     <complexType name="ConditionsType">
         <choice minOccurs="0" maxOccurs="unbounded">
-            <element ref="saml:Condition"/>
-            <element ref="saml:AudienceRestriction"/>
-            <element ref="saml:OneTimeUse"/>
-            <element ref="saml:ProxyRestriction"/>
+            <element ref="saml2:Condition"/>
+            <element ref="saml2:AudienceRestriction"/>
+            <element ref="saml2:OneTimeUse"/>
+            <element ref="saml2:ProxyRestriction"/>
         </choice>
         <attribute name="NotBefore" type="dateTime" use="optional"/>
         <attribute name="NotOnOrAfter" type="dateTime" use="optional"/>
     </complexType>
-    <element name="Condition" type="saml:ConditionAbstractType"/>
+    <element name="Condition" type="saml2:ConditionAbstractType"/>
     <complexType name="ConditionAbstractType" abstract="true"/>
-    <element name="AudienceRestriction" type="saml:AudienceRestrictionType"/>
+    <element name="AudienceRestriction" type="saml2:AudienceRestrictionType"/>
     <complexType name="AudienceRestrictionType">
         <complexContent>
-            <extension base="saml:ConditionAbstractType">
+            <extension base="saml2:ConditionAbstractType">
                 <sequence>
-                    <element ref="saml:Audience" maxOccurs="unbounded"/>
+                    <element ref="saml2:Audience" maxOccurs="unbounded"/>
                 </sequence>
             </extension>
         </complexContent>
     </complexType>
     <element name="Audience" type="anyURI"/>
-    <element name="OneTimeUse" type="saml:OneTimeUseType" />
+    <element name="OneTimeUse" type="saml2:OneTimeUseType" />
     <complexType name="OneTimeUseType">
         <complexContent>
-            <extension base="saml:ConditionAbstractType"/>
+            <extension base="saml2:ConditionAbstractType"/>
         </complexContent>
     </complexType>
-    <element name="ProxyRestriction" type="saml:ProxyRestrictionType"/>
+    <element name="ProxyRestriction" type="saml2:ProxyRestrictionType"/>
     <complexType name="ProxyRestrictionType">
     <complexContent>
-        <extension base="saml:ConditionAbstractType">
+        <extension base="saml2:ConditionAbstractType">
             <sequence>
-                <element ref="saml:Audience" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="saml2:Audience" minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
             <attribute name="Count" type="nonNegativeInteger" use="optional"/>
         </extension>
 	</complexContent>
     </complexType>
-    <element name="Advice" type="saml:AdviceType"/>
+    <element name="Advice" type="saml2:AdviceType"/>
     <complexType name="AdviceType">
         <choice minOccurs="0" maxOccurs="unbounded">
-            <element ref="saml:AssertionIDRef"/>
-            <element ref="saml:AssertionURIRef"/>
-            <element ref="saml:Assertion"/>
-            <element ref="saml:EncryptedAssertion"/>
+            <element ref="saml2:AssertionIDRef"/>
+            <element ref="saml2:AssertionURIRef"/>
+            <element ref="saml2:Assertion"/>
+            <element ref="saml2:EncryptedAssertion"/>
             <any namespace="##other" processContents="lax"/>
         </choice>
     </complexType>
-    <element name="EncryptedAssertion" type="saml:EncryptedElementType"/>
-    <element name="Statement" type="saml:StatementAbstractType"/>
+    <element name="EncryptedAssertion" type="saml2:EncryptedElementType"/>
+    <element name="Statement" type="saml2:StatementAbstractType"/>
     <complexType name="StatementAbstractType" abstract="true"/>
-    <element name="AuthnStatement" type="saml:AuthnStatementType"/>
+    <element name="AuthnStatement" type="saml2:AuthnStatementType"/>
     <complexType name="AuthnStatementType">
         <complexContent>
-            <extension base="saml:StatementAbstractType">
+            <extension base="saml2:StatementAbstractType">
                 <sequence>
-                    <element ref="saml:SubjectLocality" minOccurs="0"/>
-                    <element ref="saml:AuthnContext"/>
+                    <element ref="saml2:SubjectLocality" minOccurs="0"/>
+                    <element ref="saml2:AuthnContext"/>
                 </sequence>
                 <attribute name="AuthnInstant" type="dateTime" use="required"/>
                 <attribute name="SessionIndex" type="string" use="optional"/>
@@ -192,44 +192,44 @@
             </extension>
         </complexContent>
     </complexType>
-    <element name="SubjectLocality" type="saml:SubjectLocalityType"/>
+    <element name="SubjectLocality" type="saml2:SubjectLocalityType"/>
     <complexType name="SubjectLocalityType">
         <attribute name="Address" type="string" use="optional"/>
         <attribute name="DNSName" type="string" use="optional"/>
     </complexType>
-    <element name="AuthnContext" type="saml:AuthnContextType"/>
+    <element name="AuthnContext" type="saml2:AuthnContextType"/>
     <complexType name="AuthnContextType">
         <sequence>
             <choice>
                 <sequence>
-                    <element ref="saml:AuthnContextClassRef"/>
+                    <element ref="saml2:AuthnContextClassRef"/>
                     <choice minOccurs="0">
-                        <element ref="saml:AuthnContextDecl"/>
-                        <element ref="saml:AuthnContextDeclRef"/>
+                        <element ref="saml2:AuthnContextDecl"/>
+                        <element ref="saml2:AuthnContextDeclRef"/>
                     </choice>
                 </sequence>
                 <choice>
-                    <element ref="saml:AuthnContextDecl"/>
-                    <element ref="saml:AuthnContextDeclRef"/>
+                    <element ref="saml2:AuthnContextDecl"/>
+                    <element ref="saml2:AuthnContextDeclRef"/>
                 </choice>
             </choice>
-            <element ref="saml:AuthenticatingAuthority" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="saml2:AuthenticatingAuthority" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
     <element name="AuthnContextClassRef" type="anyURI"/>
     <element name="AuthnContextDeclRef" type="anyURI"/>
     <element name="AuthnContextDecl" type="anyType"/>
     <element name="AuthenticatingAuthority" type="anyURI"/>
-    <element name="AuthzDecisionStatement" type="saml:AuthzDecisionStatementType"/>
+    <element name="AuthzDecisionStatement" type="saml2:AuthzDecisionStatementType"/>
     <complexType name="AuthzDecisionStatementType">
         <complexContent>
-            <extension base="saml:StatementAbstractType">
+            <extension base="saml2:StatementAbstractType">
                 <sequence>
-                    <element ref="saml:Action" maxOccurs="unbounded"/>
-                    <element ref="saml:Evidence" minOccurs="0"/>
+                    <element ref="saml2:Action" maxOccurs="unbounded"/>
+                    <element ref="saml2:Evidence" minOccurs="0"/>
                 </sequence>
                 <attribute name="Resource" type="anyURI" use="required"/>
-                <attribute name="Decision" type="saml:DecisionType" use="required"/>
+                <attribute name="Decision" type="saml2:DecisionType" use="required"/>
             </extension>
         </complexContent>
     </complexType>
@@ -240,7 +240,7 @@
             <enumeration value="Indeterminate"/>
         </restriction>
     </simpleType>
-    <element name="Action" type="saml:ActionType"/>
+    <element name="Action" type="saml2:ActionType"/>
     <complexType name="ActionType">
         <simpleContent>
             <extension base="string">
@@ -248,30 +248,30 @@
             </extension>
         </simpleContent>
     </complexType>
-    <element name="Evidence" type="saml:EvidenceType"/>
+    <element name="Evidence" type="saml2:EvidenceType"/>
     <complexType name="EvidenceType">
         <choice maxOccurs="unbounded">
-            <element ref="saml:AssertionIDRef"/>
-            <element ref="saml:AssertionURIRef"/>
-            <element ref="saml:Assertion"/>
-            <element ref="saml:EncryptedAssertion"/>
+            <element ref="saml2:AssertionIDRef"/>
+            <element ref="saml2:AssertionURIRef"/>
+            <element ref="saml2:Assertion"/>
+            <element ref="saml2:EncryptedAssertion"/>
         </choice>
     </complexType>
-    <element name="AttributeStatement" type="saml:AttributeStatementType"/>
+    <element name="AttributeStatement" type="saml2:AttributeStatementType"/>
     <complexType name="AttributeStatementType">
         <complexContent>
-            <extension base="saml:StatementAbstractType">
+            <extension base="saml2:StatementAbstractType">
                 <choice maxOccurs="unbounded">
-                    <element ref="saml:Attribute"/>
-                    <element ref="saml:EncryptedAttribute"/>
+                    <element ref="saml2:Attribute"/>
+                    <element ref="saml2:EncryptedAttribute"/>
                 </choice>
             </extension>
         </complexContent>
     </complexType>
-    <element name="Attribute" type="saml:AttributeType"/>
+    <element name="Attribute" type="saml2:AttributeType"/>
     <complexType name="AttributeType">
         <sequence>
-            <element ref="saml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="saml2:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
         <attribute name="Name" type="string" use="required"/>
         <attribute name="NameFormat" type="anyURI" use="optional"/>
@@ -279,5 +279,5 @@
         <anyAttribute namespace="##other" processContents="lax"/>
     </complexType>
     <element name="AttributeValue" type="anyType" nillable="true"/>
-    <element name="EncryptedAttribute" type="saml:EncryptedElementType"/>
+    <element name="EncryptedAttribute" type="saml2:EncryptedElementType"/>
 </schema>

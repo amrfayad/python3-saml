@@ -62,8 +62,8 @@ class OneLogin_Saml2_Utils(object):
 
     """
 
-    RESPONSE_SIGNATURE_XPATH = '/samlp:Response/ds:Signature'
-    ASSERTION_SIGNATURE_XPATH = '/samlp:Response/saml:Assertion/ds:Signature'
+    RESPONSE_SIGNATURE_XPATH = '/saml2p:Response/ds:Signature'
+    ASSERTION_SIGNATURE_XPATH = '/saml2p:Response/saml2:Assertion/ds:Signature'
 
     @staticmethod
     def escape_url(url, lowercase_urlencoding=False):
@@ -386,7 +386,7 @@ class OneLogin_Saml2_Utils(object):
         :return: A unique string
         :rtype: string
         """
-        return 'ONELOGIN_%s' % sha1(compat.to_bytes(uuid4().hex)).hexdigest()
+        return '_%s' % sha1(compat.to_bytes(uuid4().hex)).hexdigest()
 
     @staticmethod
     def parse_time_to_SAML(time):
@@ -617,9 +617,9 @@ class OneLogin_Saml2_Utils(object):
             enc_ctx = xmlsec.EncryptionContext(manager)
             enc_ctx.key = xmlsec.Key.generate(xmlsec.KeyData.AES, 128, xmlsec.KeyDataType.SESSION)
             enc_data = enc_ctx.encrypt_xml(enc_data, name_id)
-            return '<saml:EncryptedID>' + compat.to_string(OneLogin_Saml2_XML.to_string(enc_data)) + '</saml:EncryptedID>'
+            return '<saml2:EncryptedID>' + compat.to_string(OneLogin_Saml2_XML.to_string(enc_data)) + '</saml2:EncryptedID>'
         else:
-            return OneLogin_Saml2_XML.extract_tag_text(root, "saml:NameID")
+            return OneLogin_Saml2_XML.extract_tag_text(root, "saml2:NameID")
 
     @staticmethod
     def get_status(dom):
@@ -634,14 +634,14 @@ class OneLogin_Saml2_Utils(object):
         """
         status = {}
 
-        status_entry = OneLogin_Saml2_XML.query(dom, '/samlp:Response/samlp:Status')
+        status_entry = OneLogin_Saml2_XML.query(dom, '/saml2p:Response/saml2p:Status')
         if len(status_entry) != 1:
             raise OneLogin_Saml2_ValidationError(
                 'Missing Status on response',
                 OneLogin_Saml2_ValidationError.MISSING_STATUS
             )
 
-        code_entry = OneLogin_Saml2_XML.query(dom, '/samlp:Response/samlp:Status/samlp:StatusCode', status_entry[0])
+        code_entry = OneLogin_Saml2_XML.query(dom, '/saml2p:Response/saml2p:Status/saml2p:StatusCode', status_entry[0])
         if len(code_entry) != 1:
             raise OneLogin_Saml2_ValidationError(
                 'Missing Status Code on response',
@@ -651,9 +651,9 @@ class OneLogin_Saml2_Utils(object):
         status['code'] = code
 
         status['msg'] = ''
-        message_entry = OneLogin_Saml2_XML.query(dom, '/samlp:Response/samlp:Status/samlp:StatusMessage', status_entry[0])
+        message_entry = OneLogin_Saml2_XML.query(dom, '/saml2p:Response/saml2p:Status/saml2p:StatusMessage', status_entry[0])
         if len(message_entry) == 0:
-            subcode_entry = OneLogin_Saml2_XML.query(dom, '/samlp:Response/samlp:Status/samlp:StatusCode/samlp:StatusCode', status_entry[0])
+            subcode_entry = OneLogin_Saml2_XML.query(dom, '/saml2p:Response/saml2p:Status/saml2p:StatusCode/saml2p:StatusCode', status_entry[0])
             if len(subcode_entry) == 1:
                 status['msg'] = subcode_entry[0].values()[0]
         elif len(message_entry) == 1:
@@ -739,7 +739,7 @@ class OneLogin_Saml2_Utils(object):
 
         signature = xmlsec.template.create(elem, xmlsec.Transform.EXCL_C14N, sign_algorithm_transform, ns='ds')
 
-        issuer = OneLogin_Saml2_XML.query(elem, '//saml:Issuer')
+        issuer = OneLogin_Saml2_XML.query(elem, '//saml2:Issuer')
         if len(issuer) > 0:
             issuer = issuer[0]
             issuer.addnext(signature)

@@ -25,7 +25,7 @@ class OneLogin_Saml2_Logout_Request(object):
 
     """
 
-    def __init__(self, settings, request=None, name_id=None, session_index=None, nq=None, name_id_format=None, spnq=None):
+    def __init__(self, settings, request=None, name_id=None, session_index=None, nq=None, name_id_format=None):
         """
         Constructs the Logout Request object.
 
@@ -45,9 +45,6 @@ class OneLogin_Saml2_Logout_Request(object):
         :type: string
 
         :param name_id_format: The NameID Format that will be set in the LogoutRequest.
-        :type: string
-
-        :param spnq: SP Name Qualifier
         :type: string
         """
         self.__settings = settings
@@ -78,23 +75,19 @@ class OneLogin_Saml2_Logout_Request(object):
                 if not name_id_format and sp_data['NameIDFormat'] != OneLogin_Saml2_Constants.NAMEID_UNSPECIFIED:
                     name_id_format = sp_data['NameIDFormat']
             else:
-                name_id = idp_data['entityId']
                 name_id_format = OneLogin_Saml2_Constants.NAMEID_ENTITY
 
-            # From saml-core-2.0-os 8.3.6, when the entity Format is used:
-            # "The NameQualifier, SPNameQualifier, and SPProvidedID attributes
-            # MUST be omitted.
-            if name_id_format and name_id_format == OneLogin_Saml2_Constants.NAMEID_ENTITY:
+            sp_name_qualifier = None
+            if name_id_format == OneLogin_Saml2_Constants.NAMEID_ENTITY:
+                name_id = idp_data['entityId']
                 nq = None
-                spnq = None
-
-            # NameID Format UNSPECIFIED omitted
-            if name_id_format and name_id_format == OneLogin_Saml2_Constants.NAMEID_UNSPECIFIED:
-                name_id_format = None
+            elif nq is not None:
+                # We only gonna include SPNameQualifier if NameQualifier is provided
+                sp_name_qualifier = sp_data['entityId']
 
             name_id_obj = OneLogin_Saml2_Utils.generate_name_id(
                 name_id,
-                spnq,
+                sp_name_qualifier,
                 name_id_format,
                 cert,
                 False,
@@ -102,7 +95,7 @@ class OneLogin_Saml2_Logout_Request(object):
             )
 
             if session_index:
-                session_index_str = '<samlp:SessionIndex>%s</samlp:SessionIndex>' % session_index
+                session_index_str = '<saml2p:SessionIndex>%s</saml2p:SessionIndex>' % session_index
             else:
                 session_index_str = ''
 
@@ -170,7 +163,7 @@ class OneLogin_Saml2_Logout_Request(object):
         """
         elem = OneLogin_Saml2_XML.to_etree(request)
         name_id = None
-        encrypted_entries = OneLogin_Saml2_XML.query(elem, '/samlp:LogoutRequest/saml:EncryptedID')
+        encrypted_entries = OneLogin_Saml2_XML.query(elem, '/saml2p:LogoutRequest/saml2:EncryptedID')
 
         if len(encrypted_entries) == 1:
             if key is None:
@@ -179,12 +172,12 @@ class OneLogin_Saml2_Logout_Request(object):
                     OneLogin_Saml2_Error.PRIVATE_KEY_NOT_FOUND
                 )
 
-            encrypted_data_nodes = OneLogin_Saml2_XML.query(elem, '/samlp:LogoutRequest/saml:EncryptedID/xenc:EncryptedData')
+            encrypted_data_nodes = OneLogin_Saml2_XML.query(elem, '/saml2p:LogoutRequest/saml2:EncryptedID/xenc:EncryptedData')
             if len(encrypted_data_nodes) == 1:
                 encrypted_data = encrypted_data_nodes[0]
                 name_id = OneLogin_Saml2_Utils.decrypt_element(encrypted_data, key)
         else:
-            entries = OneLogin_Saml2_XML.query(elem, '/samlp:LogoutRequest/saml:NameID')
+            entries = OneLogin_Saml2_XML.query(elem, '/saml2p:LogoutRequest/saml2:NameID')
             if len(entries) == 1:
                 name_id = entries[0]
 
@@ -246,7 +239,7 @@ class OneLogin_Saml2_Logout_Request(object):
 
         elem = OneLogin_Saml2_XML.to_etree(request)
         issuer = None
-        issuer_nodes = OneLogin_Saml2_XML.query(elem, '/samlp:LogoutRequest/saml:Issuer')
+        issuer_nodes = OneLogin_Saml2_XML.query(elem, '/saml2p:LogoutRequest/saml2:Issuer')
         if len(issuer_nodes) == 1:
             issuer = OneLogin_Saml2_XML.element_text(issuer_nodes[0])
         return issuer
@@ -263,7 +256,7 @@ class OneLogin_Saml2_Logout_Request(object):
 
         elem = OneLogin_Saml2_XML.to_etree(request)
         session_indexes = []
-        session_index_nodes = OneLogin_Saml2_XML.query(elem, '/samlp:LogoutRequest/samlp:SessionIndex')
+        session_index_nodes = OneLogin_Saml2_XML.query(elem, '/saml2p:LogoutRequest/saml2p:SessionIndex')
         for session_index_node in session_index_nodes:
             session_indexes.append(OneLogin_Saml2_XML.element_text(session_index_node))
         return session_indexes

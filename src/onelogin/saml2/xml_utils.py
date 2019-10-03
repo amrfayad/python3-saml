@@ -25,7 +25,6 @@ class OneLogin_Saml2_XML(object):
     _parse_etree = staticmethod(fromstring)
     _schema_class = etree.XMLSchema
     _text_class = compat.text_types
-    _bytes_class = compat.bytes_type
     _unparse_etree = staticmethod(tostring)
 
     dump = staticmethod(etree.dump)
@@ -62,10 +61,8 @@ class OneLogin_Saml2_XML(object):
         """
         if isinstance(xml, OneLogin_Saml2_XML._element_class):
             return xml
-        if isinstance(xml, OneLogin_Saml2_XML._bytes_class):
-            return OneLogin_Saml2_XML._parse_etree(xml, forbid_dtd=True)
         if isinstance(xml, OneLogin_Saml2_XML._text_class):
-            return OneLogin_Saml2_XML._parse_etree(compat.to_bytes(xml), forbid_dtd=True)
+            return OneLogin_Saml2_XML._parse_etree(xml, forbid_dtd=True)
 
         raise ValueError('unsupported type %r' % type(xml))
 
@@ -147,9 +144,7 @@ class OneLogin_Saml2_XML(object):
         :rtype: etree.Element
         """
         all_prefixes_to_keep = [
-            OneLogin_Saml2_Constants.NS_PREFIX_XS,
-            OneLogin_Saml2_Constants.NS_PREFIX_XSI,
-            OneLogin_Saml2_Constants.NS_PREFIX_XSD
+            OneLogin_Saml2_Constants.NS_PREFIX_XS
         ]
 
         if keep_ns_prefixes:
